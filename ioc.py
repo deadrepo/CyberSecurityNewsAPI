@@ -14,12 +14,9 @@ from flask import Flask, jsonify
 import requests
 from bs4 import BeautifulSoup
 from fake_useragent import UserAgent
-from flask_caching import Cache
 
 app = Flask(__name__)
-cache = Cache(app, config={'CACHE_TYPE': 'simple'})  # Enable caching
 
-# Function to fetch and parse a webpage
 def fetch_news():
     ua = UserAgent()
     headers = {
@@ -55,7 +52,8 @@ def fetch_news():
 
     return news_data
 
-@app.route("/news", methods=["GET"])
-@cache.cached(timeout=60)  # Cache for 1 minutes to reduce requests
+@app.route("/api/news", methods=["GET"])  # Use /api/news
 def get_news():
     return jsonify(fetch_news())
+
+# No app.run() needed for Vercel
